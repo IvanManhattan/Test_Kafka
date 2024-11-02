@@ -9,16 +9,22 @@ import java.util.Map;
 
 @RestController
 public class CurrencyController {
-
+    private final RequestProducerService requestProducerService;
     @Autowired
     private CurrencyService currencyService;
 
-    @GetMapping("/api/currencies")
-    public List<Currency> getCurrencies() {
-        return currencyService.getLatestRates();
+    public CurrencyController(RequestProducerService requestProducerService) {
+        this.requestProducerService = requestProducerService;
     }
-    @GetMapping("/api/currencyHistory")
+
+    @GetMapping("/sendRequest")
+    public String sendRequest() {
+        String apiUrl = "https://api.nbrb.by/exrates/rates?periodicity=0";
+        requestProducerService.sendRequest(apiUrl);
+        return "Request with URL sent to Kafka: " + apiUrl;
+    }
+    /*@GetMapping("/api/currencyHistory")
     public List<CurrencyRateHistory> getCurrencyHistory() {
         return currencyService.getCurrencyHistory(431, "2024-09-20", "2024-09-30");
-    }
+    }*/
 }

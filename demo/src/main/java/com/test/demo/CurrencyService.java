@@ -19,19 +19,17 @@ public class CurrencyService {
     private List<Currency> currencies;
     private List<CurrencyRateHistory> currencyRateHistory;
 
-    public List<Currency> getLatestRates() {
+    public List<Currency> getLatestRates(String apiUrl) {
         RestTemplate restTemplate = new RestTemplate();
-        String jsonResponse = restTemplate.getForObject(EXCHANGE_RATE_API_URL_2, String.class);
-        System.out.println(jsonResponse);
+        String jsonResponse = restTemplate.getForObject(apiUrl, String.class);  // Используем переданный URL
+        System.out.println("API Response: " + jsonResponse);
         currencies = new ArrayList<>();
 
         if (jsonResponse != null) {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
-
                 // JSON mapping into Currency objects
                 currencies = objectMapper.readValue(jsonResponse, new TypeReference<List<Currency>>() {});
-
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Error parsing JSON: " + e.getMessage());
